@@ -5,6 +5,8 @@ import { Grid, Row, Col } from 'react-native-easy-grid';
 import { Avatar } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
+import { ImagePicker } from 'expo';
+import * as firebase from 'firebase';
 
 const styles = StyleSheet.create({
     statsContainer: {
@@ -27,11 +29,74 @@ class ProfileScreen extends Component{
         title: 'Profile',
         headerRight: <Button title="Add Contacts" onPress={() => navigation.navigate('AddContacts')} />
     });
+
+    state = {
+        photoURL: null,
+        database: firebase.database(),
+    }
+
+componentDidMount() {
+    //bind functions to navigation params
+    this.props.navigation.setParams({ 
+        showImagePicker: this._pickImage.bind(this)
+    });
+}
+
  gravatarURL() {
      let email = this.props.auth.email;
-     return 'https://gravatar.com/avatar/' + md5(email) + '?s=400';
+     return this.props.profile.photoURL;
  }
     
+//pick image from library asynchronously
+_pickImage = async () => {      // picks image from device
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    //console.log('_pickImage: ' + result);
+    
+    if (!result.cancelled) {
+        console.log(this.props.auth);
+        console.log(this.props.profile);
+        this._uploadImage(result.uri, this.props.auth.displayName)
+        .then(() => {
+            console.log('Upload Success');
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+        .then();
+        //set the photoAdded bool to change button text
+    }
+}
+
+//upload photo selected to firebase file storage
+_uploadImage = async (uri, imageName) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    var ref = firebase.storage().ref().child("images/"+ this.props.auth.uid + '/' + imageName);
+    await ref.put(blob)
+    firebase.storage().ref().child("images/"+ this.props.auth.uid + '/' + imageName).getDownloadURL()
+    .then(url => {
+        //set image uri
+        this.setState({ photoURL: url});
+        firebase.auth().currentUser.updateProfile({
+            photoURL: url,
+          }).then(function() {
+            //console.log("Profile updated successfully!");
+          }, function(error) {
+            // An error happened.
+            Alert.alert(error.message);
+          });
+          //add user to the database with initial parameters
+          this.state.database.ref('profiles/' + firebase.auth().currentUser.uid).update({
+           photoURL: url,
+          })
+    });
+}
+
 
  render(){
      let name = this.props.profile ? this.props.profile.username : 'Anonymous';
@@ -45,6 +110,7 @@ class ProfileScreen extends Component{
                 rounded
                 source={{uri: this.gravatarURL()}}
                 containerStyle={{marginTop:35, width: 75, height: 75, marginVertical: 10}}
+                onPress={() => this.props.navigation.state.params.showImagePicker()}
                 />
                 <Text style={{fontSize: 18, marginBottom: 15}}>{name}</Text>
             <Row>

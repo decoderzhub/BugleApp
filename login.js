@@ -124,6 +124,7 @@ _performSignup() {
             following: 0,
             posts: 0,
             email: email,
+            photoURL: null,
            })
            //save credentials function
            this._saveCredentials(credentials)    
