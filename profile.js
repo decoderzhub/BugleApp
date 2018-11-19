@@ -33,6 +33,7 @@ class ProfileScreen extends Component{
     state = {
         photoURL: null,
         database: firebase.database(),
+        initials: null,
     }
 
 componentDidMount() {
@@ -42,11 +43,42 @@ componentDidMount() {
     });
 }
 
- gravatarURL() {
-     let email = this.props.auth.email;
-     return this.props.profile.photoURL;
+ _avatarURL() {
+    // console.log(this.props.profile);
+    if(!this.props.profile.photoURL){
+    //return user initials as photo like slack
+        return null;
+    }else{
+        return this.props.profile.photoURL;
+    } 
+
  }
+  
+ _getInitials(){
+    if(firebase.auth().currentUser.displayName != null){ //does displayName exist if so then lets get first and last initial
+
+      var name = firebase.auth().currentUser.displayName.split(' '); //split the first and last name where there is a space " "
+      //console.log(name[0]);
+
+      console.log("first name: " + name[0] + " last name: " + name[1])
+      
+      var fInitial = name[0].slice(0, 1); // get first initial of first name
+      
+      var lInitial = name[1].slice(0, 1); // get first initial of last name
+      
+      console.log("initials: " + fInitial+lInitial );
+      
+      this.state.initials=fInitial+lInitial;
+      
+      console.log(this.state.initials);
+
+      return this.state.initials //returns the first and last initials
     
+    }else{
+      return this.state.initials; //returns the initials "??""
+    }
+  } 
+
 //pick image from library asynchronously
 _pickImage = async () => {      // picks image from device
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -102,16 +134,34 @@ _uploadImage = async (uri, imageName) => {
      let name = this.props.profile ? this.props.profile.username : 'Anonymous';
      let follow = this.props.profile && this.props.profile.following ? Object.keys(this.props.profile.following).length : 0;
      let posts = this.props.profile.posts ? Object.keys(this.props.profile.posts).length : 0;
-     return(
-        <Grid>
-            <Col style={{alignItems: 'center'}}>
-                <Avatar
+     let displayAvatar = null;
+    
+     if(this._avatarURL())
+     {
+         displayAvatar = (
+            <Avatar
                 large
                 rounded
-                source={{uri: this.gravatarURL()}}
+                source={{uri: this._avatarURL()}}
                 containerStyle={{marginTop:35, width: 75, height: 75, marginVertical: 10}}
                 onPress={() => this.props.navigation.state.params.showImagePicker()}
                 />
+         )
+    }else{
+        displayAvatar = (
+            <Avatar
+                large
+                rounded
+                title={this._getInitials()}
+                containerStyle={{marginTop:35, width: 75, height: 75, marginVertical: 10}}
+                onPress={() => this.props.navigation.state.params.showImagePicker()}
+                />
+         )
+    }
+     return(
+        <Grid>
+            <Col style={{alignItems: 'center'}}>
+                {displayAvatar}
                 <Text style={{fontSize: 18, marginBottom: 15}}>{name}</Text>
             <Row>
                 <Col style={styles.statsContainer}><Text style={styles.stats}> {follow} Following</Text></Col>
