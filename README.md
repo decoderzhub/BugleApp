@@ -54,6 +54,10 @@ Users can open the events and see the details of the event
 7. [ ] Event details needs start time field and hours of credit volunteers will receive.
 
 8. [X] Display users uploaded photo or initials in avatar if photo is not present. 18-Nov-18
+
+9. [ ] Fix avatar rounded corner bug on Android devices.
+
+
 ***
 
 ## Things to do  (long-range)
