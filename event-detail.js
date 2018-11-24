@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Alert, Dimensions, ScrollView } from 'react-native';
+import { View, Alert, Dimensions, ScrollView, Platform } from 'react-native';
 import { FormLabel, FormInput, Button, FormValidationMessage, Tooltip, Text } from 'react-native-elements';
 import { MapView, ImagePicker, Permissions, Location } from 'expo';
 import { connect } from 'react-redux';
@@ -142,12 +142,13 @@ export default class EventDetailScreen extends Component {
         console.log(region);
       }
      //lastly get's location and posts to firebase db.
-    _getLocationAsync = async () => {        
+    async _getLocationAsync(){
+        console.log('running get location async')        
         //retrieves user's location
-        let location = await Location.getCurrentPositionAsync({});  
+        //let location = await Location.getCurrentPositionAsync({});  
         //gets postal location of lat/long and retrieves user's postal address
         let postal = await Location.reverseGeocodeAsync({
-            latitude: location.coords.latitude, longitude: location.coords.longitude}) 
+            latitude: this.state.region.latitude, longitude: this.state.region.longitude}) 
         //console.log("postal: " + JSON.stringify(postal)) 
         // post to firebase db with push
         this.props.firebase.push('/posts', { 
@@ -166,56 +167,65 @@ export default class EventDetailScreen extends Component {
         //updates the post count
         .then(this._updatePostCount(this.state.name))
         //alerts user of new event creation
-        .then(Alert.alert("Congratulations!,\n"+ this.props.profile.username +"\n"+
-                          "You just created the event " + this.state.name +"!"))
+        .then(Alert.alert("Congratulations!", this.props.profile.username +"\n"+"You just created the event " + this.state.name +"!",
+            [
+            {text: 'Edit', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {text: 'Continue', onPress: () => this._displayTimeline()},
+            ],
+          { cancelable: true }))
+          //log any errors
+          .then((result) => console.log(result));
+        };
+        
+    _displayTimeline() {
         //sends user back to timeline screen
-        .then(this.props.navigation.dispatch(StackActions.reset({
-                index:0,
-                actions: [NavigationActions.navigate({ routeName: 'Timeline'})]
-        })));
-    };
+        this.props.navigation.dispatch(StackActions.reset({
+            index:0,
+            actions: [NavigationActions.navigate({ routeName: 'Timeline'})]
+    }));
+    }
+    
+    //updates the count of post on firebase db
+    _updatePostCount(eventName) {
+        let updates = {};
+        let posts = this.props.profile.posts || [];
+        posts.push(eventName);
+        updates['/profiles/' + this.props.auth.uid + '/posts'] = posts;
+        this.state.database.ref().update(updates);
+    }
 
-//updates the count of post on firebase db
-_updatePostCount(eventName) {
-    let updates = {};
-    let posts = this.props.profile.posts || [];
-    posts.push(eventName);
-    updates['/profiles/' + this.props.auth.uid + '/posts'] = posts;
-    this.state.database.ref().update(updates);
-}
+    //parse current time in 12:00 AM/PM format
+    _parseTime(time) {  //parse time for event
+        let semi = ':';
+        let space = ' ';
+        let nTime = time.split(':')
+        let hour = nTime[0];
+        let min = nTime [1];
+        if ( hour > 12){
+            let tod = 'PM';
+            hour = hour - 12;
+            let parsedTime = hour+semi+min+space+tod;
+            return parsedTime;
 
-//parse current time in 12:00 AM/PM format
-_parseTime(time) {  //parse time for event
-    let semi = ':';
-    let space = ' ';
-    let nTime = time.split(':')
-    let hour = nTime[0];
-    let min = nTime [1];
-    if ( hour > 12){
-        let tod = 'PM';
-        hour = hour - 12;
-        let parsedTime = hour+semi+min+space+tod;
-        return parsedTime;
+        }else{
+            let tod = 'AM';
+            let parsedTime = hour+semi+min+space+tod;
+            return parsedTime;
 
-    }else{
-        let tod = 'AM';
-        let parsedTime = hour+semi+min+space+tod;
-        return parsedTime;
-
-    }        
-}
-//parse date and returns current time
-_parsedDate(date) {  //parse date for events
-    let ndate = date.toString().split(' ');
-    let time = this._parseTime(ndate[4]);
-    return time.toString();
-}
-//gets todays date
-_getTodaysDate() {
-    var today = new Date();
-    var date =  parseInt(today.getMonth()+1).toString() +'/'+ today.getDate().toString() +'/'+ today.getFullYear().toString().slice(2,4);
-    return date; 
-}
+        }        
+    }
+    //parse date and returns current time
+    _parsedDate(date) {  //parse date for events
+        let ndate = date.toString().split(' ');
+        let time = this._parseTime(ndate[4]);
+        return time.toString();
+    }
+    //gets todays date
+    _getTodaysDate() {
+        var today = new Date();
+        var date =  parseInt(today.getMonth()+1).toString() +'/'+ today.getDate().toString() +'/'+ today.getFullYear().toString().slice(2,4);
+        return date; 
+    }
 
 render() {
     
@@ -374,8 +384,11 @@ _performPhotoOrPost() {
             this.setState({creditValidation: false})
             return;
         }
-        //call async function getCurrentPosition() to get location 
+        //call async function getCurrentPosition() to get location
+        console.log(this.state.photoAdded);
+        console.log(Platform.OS);
         this.props.navigation.state.params.getCurrentPosition();
+        
         
     } else {
         //do photo if photoAdded is false then allow user to pick image

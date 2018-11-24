@@ -14,6 +14,7 @@ import TimelineScreen from './timeline';
 import PostDetailScreen from './post-detail';
 import ProfileScreen from './profile';
 import EventDetailScreen from './event-detail';
+import MessengerScreen from './messenger';
 
 const TimelineNavigator = createStackNavigator({
   Timeline: { screen: TimelineScreen },
@@ -34,9 +35,20 @@ ProfileNavigator.navigationOptions = {
   tabBarIcon: ({ tintColor }) => <Icon color={tintColor} name="account-box" />
 };
 
+const MessengerNavigator = createStackNavigator({
+  Messages: { screen: MessengerScreen },
+});
+MessengerNavigator.navigationOptions = {
+  title: 'Event Messenger',
+  tabBarIcon: ({ tintColor }) => <Icon color={tintColor} name="message" />
+};
+
+
+
 const MainNavigator = createBottomTabNavigator({
   Home: { screen: TimelineNavigator },
-  Profile: { screen: ProfileNavigator }
+  Profile: { screen: ProfileNavigator },
+  Messenger: { screen: MessengerNavigator},
 });
 
 @firebaseConnect()
@@ -48,6 +60,12 @@ const MainNavigator = createBottomTabNavigator({
   })
 )
 class Main extends Component {
+  constructor() {
+    super();
+    console.ignoredYellowBox = [
+    'Setting a timer'
+    ];
+    }
   state = { authComplete: false};
 
     async _setupAuthentication() {

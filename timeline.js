@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
 import { 
-    Button, 
     ScrollView, 
     ImageBackground, 
     Text, 
     View, 
     TouchableHighlight, 
     Dimensions,
-    Alert
+    Alert,
+    Button
 } from 'react-native';
 import { Avatar, Icon, List, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { firebaseConnect, populate } from 'react-redux-firebase';
 import md5 from 'blueimp-md5';
+import { setUserName, setUserAvatar, startChatting } from './src/actions';
+import user from './src/reducers/user';
 
 const populates = [{
      child: 'user_id', root: 'profiles'
 }]
 
 @firebaseConnect([
-    { path: '/posts', queryParams: ['orderByChild=created_at', 'limitToLast=5'], populates}
+    { path: '/posts', queryParams: ['orderByChild=created_at', 'limitToLast=10'], populates}
 ])  
 @connect(
     ({ firebase}) => ({
@@ -30,11 +32,11 @@ const populates = [{
     })
   )
 export default class TimelineScreen extends Component {
-   
-
     static navigationOptions = ({ navigation }) => ({
         title: 'Recent Events',
-        headerRight: <Button title="Add Event" onPress={() => navigation.navigate('EventDetails')}/>
+        headerRight: <Button
+            title='Add Event'
+            onPress={() => navigation.navigate('EventDetails')}/>
     });
 
     state = {
@@ -102,6 +104,13 @@ export default class TimelineScreen extends Component {
         return timePosted;
     }
 
+    componentWillReceiveProps(props) {
+        const { posts } = this.props;
+        if (props.posts !== posts) {
+          console.log("received post!");
+        }
+      }
+
     render() {
         let posts = null;
         let displayAvatar = null;
@@ -117,11 +126,8 @@ export default class TimelineScreen extends Component {
                     medium
                     rounded
                     source={{uri: post.user_id.photoURL}}
-                    containerStyle={{width: 25, 
-                                     height: 25, 
-                                     position: "absolute", 
-                                     marginTop:5, 
-                                     marginLeft: Dimensions.get('window').width-50}}
+                    containerStyle={{borderRadius: 25,
+                                     marginLeft: Dimensions.get('window').width-70}}
                     />                
                    )
                    listItem = (
@@ -146,7 +152,7 @@ export default class TimelineScreen extends Component {
                     containerStyle={{width: 50, 
                                      height: 50, 
                                      position: "absolute", 
-                                     marginTop:-5, 
+                                     marginTop:-5,
                                      marginLeft: Dimensions.get('window').width-60}}
                     />                
                    )
@@ -171,7 +177,7 @@ export default class TimelineScreen extends Component {
                 return (
                     <View 
                     key={i} 
-                    style={{padding: 10, marginBottom: 25, backgroundColor: '#FFF'}}
+                    style={{padding: 10, marginBottom: 25, borderRadius:25, backgroundColor: '#FFF'}}
                     >
                         
                         
