@@ -51,11 +51,11 @@ Users can open the events and see the details of the event
 
 6. [ ] Post Event Details need to populate on screen with supplied information.
 
-7. [ ] Event details needs start time field and hours of credit volunteers will receive.
+7. [X] Event details needs start time field and hours of credit volunteers will receive. 20-Nov-18
 
 8. [X] Display users uploaded photo or initials in avatar if photo is not present. 18-Nov-18
 
-9. [ ] Fix avatar rounded corner bug on Android devices.
+9. [X] Fix avatar rounded corner bug on Android devices. (containerSytle and/or parent view style)  20-Nov-18
 
 
 ***
@@ -63,7 +63,7 @@ Users can open the events and see the details of the event
 ## Things to do  (long-range)
 1. [ ] App splash screen
 
-2. [ ] Instant Messenger
+2. [ ] Instant Messenger __Working on it..__ 🤯🤯🤯
 
 3. [ ] Instant Notifications
 
