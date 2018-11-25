@@ -37,6 +37,8 @@ Users can open the events and see the details of the event
 
 ***
 
+# Milestones 
+
 ## Things to do (short-range):
 
 1. [X] Post counter increases when user adds post or events. 05-Nov-18
@@ -45,7 +47,7 @@ Users can open the events and see the details of the event
 
 3. [X] Upload images to file storage to be access from all users through the firebase db. 05-Nov-18
 
-4. [X] Delete post, image, db content, and decrease post count.
+4. [X] Delete post, image, db content, and decrease post count. 15-Nov-18
 
 5. [X] Marker on event location.  05-nov-18 
 
@@ -57,7 +59,18 @@ Users can open the events and see the details of the event
 
 9. [X] Fix avatar rounded corner bug on Android devices. (containerSytle and/or parent view style)  20-Nov-18
 
+10. [ ] Show stats for users profile __(following, post, Rx requests, Tx request, credits)__ 
 
+11. [X] Develop messenger groups for created post 25-Nov-18
+
+12. [ ] Allow members to join the group and display group in messenger.
+
+13. [ ] Develop screen component Received request, Sent request, and Received credits. __(Add to AppNavigator)__
+
+14. [ ] Allow user to un-join events removing user from chat-group and updating database.
+
+
+ 
 ***
 
 ## Things to do  (long-range)
@@ -69,6 +82,7 @@ Users can open the events and see the details of the event
 
 4. [ ] Google Auth Signin
 
+5. [ ] Acoustic development
 
 ***
 
