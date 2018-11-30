@@ -1,15 +1,14 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ReactNative, { Text as MyText} from 'react-native';
+import ReactNative, { Text as MyText } from 'react-native';
 
-import { Title, Screen } from '@shoutem/ui';
+import { Screen } from '@shoutem/ui';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Messages from '../containers/Messages';
 import Input from '../containers/Input';
-import { sendMessage } from '../actions';
+import { sendMessage, groupLocation } from '../actions';
 import { Font } from 'expo';
-import { firebaseConnect } from 'react-redux-firebase';
 import { begin, setUserName, setUserAvatar} from '../actions';
 import * as firebase from 'firebase';
 
@@ -20,6 +19,7 @@ const mapStateToProps = (state) => ({
 
 
 class ChatUI extends Component {
+
     state = {
         scrollViewHeight: 0,
         inputHeight: 0,
@@ -31,7 +31,7 @@ class ChatUI extends Component {
         await Font.loadAsync({
           'Rubik-Regular': require('@shoutem/ui/fonts/Rubik-Regular.ttf')
         });
-    
+        groupLocation(this.props.navigation.state.params.group.group_key)
         this.setState({ fontLoaded: true });
         this.scrollToBottom(false);
         this.props.dispatch(begin());
@@ -53,7 +53,6 @@ class ChatUI extends Component {
 
     onInputLayout = (event) => {
         const layout = event.nativeEvent.layout;
-
         this.setState({
             inputHeight: layout.height
         });
@@ -82,12 +81,13 @@ class ChatUI extends Component {
     render() {
         return (
             <Screen>
-                {
+                {/*
                     this.state.fontLoaded ? (
                 <Title styleName="h-center" style={{paddingTop: 10}}>
                     Global Chatroom
                 </Title>
                     ) : <MyText> loading... </MyText>
+                 */
                 }
                 <KeyboardAwareScrollView ref="scroll"
                                          onLayout={this.onScrollViewLayout}>

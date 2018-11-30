@@ -2,26 +2,11 @@ import React, { Component } from 'react';
 import { Button, Text, StyleSheet } from 'react-native';
 import md5 from 'blueimp-md5';
 import { Grid, Row, Col } from 'react-native-easy-grid';
-import { Avatar } from 'react-native-elements';
+import { Avatar, List, ListItem, Button as RNButton } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { ImagePicker } from 'expo';
 import * as firebase from 'firebase';
-
-const styles = StyleSheet.create({
-    statsContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#FFF',
-        height: 40,
-    },
-
-    stats: {
-        fontWeight: '700'
-    }
-});
-
 
   @firebaseConnect()
 class ProfileScreen extends Component{
@@ -34,6 +19,7 @@ class ProfileScreen extends Component{
         photoURL: null,
         database: firebase.database(),
         initials: null,
+        invites: 0,
     }
 
 componentDidMount() {
@@ -42,6 +28,7 @@ componentDidMount() {
         showImagePicker: this._pickImage.bind(this)
     });
 }
+
 
  _avatarURL() {
     // console.log(this.props.profile);
@@ -53,32 +40,11 @@ componentDidMount() {
     } 
 
  }
-  
- _getInitials(){
-    if(firebase.auth().currentUser.displayName != null){ //does displayName exist if so then lets get first and last initial
 
-      var name = firebase.auth().currentUser.displayName.split(' '); //split the first and last name where there is a space " "
-      //console.log(name[0]);
 
-      console.log("first name: " + name[0] + " last name: " + name[1])
-      
-      var fInitial = name[0].slice(0, 1); // get first initial of first name
-      
-      var lInitial = name[1].slice(0, 1); // get first initial of last name
-      
-      console.log("initials: " + fInitial+lInitial );
-      
-      this.state.initials=fInitial+lInitial;
-      
-      console.log(this.state.initials);
+_performSignOut = () => {
 
-      return this.state.initials //returns the first and last initials
-    
-    }else{
-      return this.state.initials; //returns the initials "??""
-    }
-  } 
-
+}
 //pick image from library asynchronously
 _pickImage = async () => {      // picks image from device
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -89,8 +55,8 @@ _pickImage = async () => {      // picks image from device
     //console.log('_pickImage: ' + result);
     
     if (!result.cancelled) {
-        console.log(this.props.auth);
-        console.log(this.props.profile);
+        //console.log(this.props.auth);
+        //console.log(this.props.profile);
         this._uploadImage(result.uri, this.props.auth.displayName)
         .then(() => {
             console.log('Upload Success');
@@ -134,38 +100,76 @@ _uploadImage = async (uri, imageName) => {
      let name = this.props.profile ? this.props.profile.username : 'Anonymous';
      let follow = this.props.profile && this.props.profile.following ? Object.keys(this.props.profile.following).length : 0;
      let posts = this.props.profile.posts ? Object.keys(this.props.profile.posts).length : 0;
+     let received_request = this.props.profile.profile_stats.received_request ? Object.keys(this.props.profile.profile_stats.received_request).length : 0;
+     let sent_request = this.props.profile.profile_stats.sent_request ? Object.keys(this.props.profile.profile_stats.sent_request).length : 0;
      let displayAvatar = null;
     
      if(this._avatarURL())
      {
          displayAvatar = (
             <Avatar
-                large
+                xlarge
                 rounded
                 source={{uri: this._avatarURL()}}
-                containerStyle={{marginTop:35, width: 75, height: 75, marginVertical: 10}}
+                containerStyle={{borderRadius: 25, marginTop:35, marginVertical: 10}}
                 onPress={() => this.props.navigation.state.params.showImagePicker()}
                 />
          )
     }else{
         displayAvatar = (
             <Avatar
-                large
+                xlarge
                 rounded
-                title={this._getInitials()}
-                containerStyle={{marginTop:35, width: 75, height: 75, marginVertical: 10}}
+                title={this.props.profile.initials}
+                containerStyle={{marginTop:35, marginVertical: 10}}
                 onPress={() => this.props.navigation.state.params.showImagePicker()}
                 />
          )
     }
      return(
-        <Grid>
+
+        <Grid style={{backgroundColor: '#ffbf00'}}>
             <Col style={{alignItems: 'center'}}>
                 {displayAvatar}
-                <Text style={{fontSize: 18, marginBottom: 15}}>{name}</Text>
+                <Text style={{fontSize: 18, marginTop: 5}}>{name}</Text>
             <Row>
-                <Col style={styles.statsContainer}><Text style={styles.stats}> {follow} Following</Text></Col>
-                <Col style={styles.statsContainer}><Text style={styles.stats}> {posts} Posts</Text></Col>
+                <Col>
+                <List>
+                <ListItem badge={{ value: follow, textStyle: { color: '#ffbf00' }, 
+                          containerStyle: { marginRight: 55 } }}
+                          title="You're Following"
+                          titleStyle={{textAlign: 'center', marginLeft: 75}}
+                          hideChevron
+                          />
+                <ListItem badge={{ value: posts, textStyle: { color: '#ffbf00' }, 
+                          containerStyle: { marginRight: 55 } }}
+                          title="Created Post"
+                          titleStyle={{textAlign: 'center', marginLeft: 75}}
+                          hideChevron
+                          />
+                <ListItem badge={{ value: received_request, textStyle: { color: '#ffbf00' }, 
+                          containerStyle: { marginRight: 25} }}
+                          title="Received Requests"
+                          titleStyle={{textAlign: 'center', marginLeft: 80}}
+                          onPress={() => this.props.navigation.navigate('ReceivedRequestScreen', {received_request})}
+                          />
+                <ListItem badge={{ value: sent_request, textStyle: { color: '#ffbf00' }, 
+                          containerStyle: { marginRight: 25} }}
+                          title="Sent Request"
+                          titleStyle={{textAlign: 'center', marginLeft: 80}}
+                          />
+                <ListItem badge={{ value: 0, textStyle: { color: '#ffbf00' }, 
+                          containerStyle: { marginRight: 25} }}
+                          title="Received Credits"
+                          titleStyle={{textAlign: 'center', marginLeft: 80}}
+                          />
+                </List>
+                <RNButton 
+                onPress={() => this._performSignOut()}
+                style={{marginTop: 25}}
+                backgroundColor='#ff0000'
+                title='Sign Out'/>
+                </Col>
             </Row>
             </Col>
 

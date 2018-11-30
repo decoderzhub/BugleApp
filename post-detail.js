@@ -19,11 +19,21 @@ const populates = [{ //child of root to query from firebase db
     })
   )
 export default class PostDetailScreen extends Component {
+    constructor(props){
+        super(props);
+        console.log(this.props.auth);
+        console.log(this.props.navigation.state.params.post);
+    }
     state = {
+        database: firebase.database(),
         postUserId: this.props.navigation.state.params.post.user_id,
         postEmail: this.props.navigation.state.params.post.user_id.email,
+        postEventName: this.props.navigation.state.params.post.event_name,
         postId: [],
         imageName: this.props.navigation.state.params.post.event_name,
+        exists: false,
+        request: this.props.navigation.state.params.post.user_id.profile_stats.received_request ?
+        this.props.navigation.state.params.post.user_id.profile_stats.received_request : null ,
     }
     static navigationOptions = {
         title: 'Event Details'
@@ -42,7 +52,16 @@ export default class PostDetailScreen extends Component {
           )
     }
 
-   
+   componentDidMount(){
+    if(this.state.request){
+        Object.values(this.state.request).map((request,i)  =>{
+            if (request.event_name == this.state.postEventName && request.user_id == firebase.auth().currentUser.uid ){
+                this.setState({exists: true})
+            }
+        })
+    }
+   }
+
    //get a snapshot and key of the posts that match the one selected
     _getSnapShot() {
             var ref = firebase.database().ref("/posts");
@@ -53,7 +72,7 @@ export default class PostDetailScreen extends Component {
                 snapshot.forEach(function(childSnapshot) {
                // var postData = childSnapshot.val();
                 postId.push(childSnapshot.key);
-                self._removeEventFromDB(postId);
+                self._removeEventFromDB(postId)
             });
         })
     }
@@ -103,22 +122,81 @@ _updatePostCount() {
 
     //alert user joined event
     _joinEvent() {
-        Alert.alert('Join Event')
+        if(this.state.request){
+            Object.values(this.state.request).map((request,i)  =>{
+                //console.log(request);
+                //console.log(JSON.stringify(request) +'index = '+ i);
+                if (request.event_name == this.state.postEventName && request.user_id == firebase.auth().currentUser.uid ){
+                    Alert.alert("You have already sent a request!");
+                    return this.setState({exists: true})
+                }
+            })
+
+        }
+        if(this.state.exists == false)
+        {
+            Alert.alert("Join Event?", this.props.profile.username +"\n"+"are you sure you want to join\n" + this.state.postEventName +"?",
+                [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'Continue', onPress: () => this._sendRequest(this.props.auth.uid)},
+                ],
+              { cancelable: true })
+        }
+    }
+    
+    //send request to creator of the post and to self...
+    _sendRequest(uid) {
+        let updates = {};
+        let request = this.props.navigation.state.params.post.user_id.profile_stats.received_request || [];
+        let myrequest = this.props.profile.profile_stats.sent_request || [];
+        request.push({user_id: firebase.auth().currentUser.uid,
+                        user: firebase.auth().currentUser.displayName,
+                        photoURL: firebase.auth().currentUser.photoURL,
+                        event_name: this.state.postEventName,
+                        group_key: this.props.navigation.state.params.post.group_id
+                    });
+        let mr = {event_name: this.props.navigation.state.params.post.event_name, 
+                    created_by: this.props.navigation.state.params.post.created_by,
+                    photoURL: this.props.navigation.state.params.post.user_id.photoURL}
+        myrequest.push(mr);
+        updates['/profiles/' + this.props.navigation.state.params.post.id + '/profile_stats/received_request'] = request ;
+        updates['/profiles/' + uid +'/profile_stats/sent_request'] = myrequest;
+        this.state.database.ref().update(updates); 
+        this.state.exists=true;
     }
 
+    _alreadyJoinedButton() {
+        return(
+            <Button
+                onPress={() => Alert.alert('Already Sent Request!!!')}
+                backgroundColor={color="grey"}
+                style={{marginTop: 8}}
+                title={'Request Sent'} 
+                /> 
+            )          
+    }
+
+    _JoinOrDeleteButton() {
+        return(
+        <Button
+            onPress={this.state.postEmail != this.props.profile.email ? () => this._joinEvent() : () => this._removeEvent()}
+            backgroundColor={this.state.postEmail != this.props.profile.email ? color='green' : color="red"}
+            style={{marginTop: 8}}
+            title={this.state.postEmail != this.props.profile.email ? "Join" : "Delete"} 
+            /> 
+        )             
+    }
     render() {
         console.log(this.props.auth.uid)
+        let joinedButton = null;
+        
+        
         return(
             <View>
                 <Text>
                 Details' for {this.props.navigation.state.params.post.event_name}
                 </Text>
-                <Button
-                onPress={this.state.postEmail != this.props.profile.email ? () => this._joinEvent() : () => this._removeEvent()}
-                backgroundColor={this.state.postEmail != this.props.profile.email ? color='green' : color="red"}
-                style={{marginTop: 8}}
-                title={this.state.postEmail != this.props.profile.email ? "Join" : "Delete"} 
-                />               
+                {this.state.exists ? this._alreadyJoinedButton() : this._JoinOrDeleteButton()} 
 
             </View>
         );

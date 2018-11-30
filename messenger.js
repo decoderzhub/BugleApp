@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { Button } from 'react-native';
+import { Button, View, Text, Dimensions, ScrollView } from 'react-native';
 import { Provider, connect } from 'react-redux';
-import { firebaseConnect } from 'react-redux-firebase';
+import { List, ListItem } from 'react-native-elements';
+import { firebaseConnect, populate } from 'react-redux-firebase';
 import * as firebase from 'firebase';
-import ChatUI from './src/components/ChatUI';
 import rootReducer from './src/reducers'
-import { begin, startChatting} from './src/actions';
 
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { groupLocation } from './src/actions';
 
 const store = createStore(
     rootReducer,
@@ -18,50 +18,98 @@ const store = createStore(
     )
 );
 
-@firebaseConnect()
+const populates = [{
+    child: 'user_id', root: 'profiles'
+}]
+
+@firebaseConnect([
+   { path: '/message_groups', queryParams: ['orderByChild=created_at', 'limitToLast=10'], populates},
+
+])  
+@connect(
+   ({ firebase}) => ({
+       auth: firebase.auth,  // auth passed as props.auth
+       profile: firebase.profile, // profile passed as props.profile
+       message_groups: populate(firebase, 'message_groups', populates), //all posts from fb db
+   })
+ )
 class MessengerScreen extends Component{
     static navigationOptions = ({ navigation }) => ({
-        title: 'Messenger',
+        title: 'Messenger Groups',
     });
 
-    state = {
-        photoURL: null,
-        database: firebase.database(),
-        initials: null,
-    }
-  
- _getInitials(){
-    if(firebase.auth().currentUser.displayName != null){ //does displayName exist if so then lets get first and last initial
-
-      var name = firebase.auth().currentUser.displayName.split(' '); //split the first and last name where there is a space " "
-      //console.log(name[0]);
-
-      console.log("first name: " + name[0] + " last name: " + name[1])
-      
-      var fInitial = name[0].slice(0, 1); // get first initial of first name
-      
-      var lInitial = name[1].slice(0, 1); // get first initial of last name
-      
-      console.log("initials: " + fInitial+lInitial );
-      
-      this.state.initials=fInitial+lInitial;
-      
-      console.log(this.state.initials);
-
-      return this.state.initials //returns the first and last initials
-    
-    }else{
-      return this.state.initials; //returns the initials "??""
-    }
-  } 
-
  render(){
-    
-     return(
-        <Provider store={store}>
-            <ChatUI/>
-       </Provider>
-     );
+        let groups = null;
+        let approved = false;
+        if (this.props.message_groups)
+        {
+         //d = this._discoverGroups();
+         //console.log("d = " + d);
+            groups = Object.values(this.props.message_groups).map((group, i) =>{            
+           // Object.values(this.state.groupInfo.approved_users).map((user, i) => {this.state.username = user.name})
+           // console.log(this.state.username)
+              item = Object.values(group.approved_users).map((user, i) => {
+            //     console.log(user.name)
+                if(user.name === firebase.auth().currentUser.displayName)
+                        {     
+                            approved = true;
+                            g = ( 
+
+                                <ListItem 
+                                containerStyle={{backgroundColor: '#ffa64e', borderRadius: 15}}
+                                titleStyle={{color: 'white'}}
+                                title={group.group_name}
+                                rightIcon={{name: 'chevron-right', color: 'white'}}
+                                rightTitle='Enter Chat Room'
+                                rightTitleStyle={{color: 'white'}}
+                                onPress={() => this.props.navigation.navigate('ChatUI', {group})}
+                                />
+                                )
+                                return(
+                                <List key={i} containerStyle={{backgroundColor: '#c4e2ff'}}>
+                                {g}
+                                </List>
+                                )
+                        }
+                        
+                    })
+                    return item
+                })
+     
+                if(approved == false){
+                    return(
+                        <View style={{backgroundColor:'#c4e2ff', flex: 1}}>
+                            <Text style={{paddingTop: Dimensions.get('window').height*.25, justifyContent: 'center',textAlign: 'center', fontStyle: 'italic', fontSize: 32}}>
+                            You're not in any groups 😭
+                            </Text>
+                        </View>
+                    );
+                }
+               
+        }else{
+            return(
+                <View style={{backgroundColor:'#c4e2ff', flex: 1}}>
+                    <Text style={{paddingTop: Dimensions.get('window').height*.25, justifyContent: 'center',textAlign: 'center', fontStyle: 'italic', fontSize: 32}}>
+                    There are no groups 😱
+                    </Text>
+                </View>
+            );
+        }
+      return(
+          <View style={{backgroundColor:'#c4e2ff', flex: 1}}>
+            <ScrollView>
+                
+                {groups ? <View containerStyle={{backgroundColor: '#c4e2ff'}}>{groups}</View> : 
+                <Text style={{paddingTop: Dimensions.get('window').height*.25,
+                              justifyContent: 'center',textAlign: 'center', 
+                              fontStyle: 'italic', 
+                              fontSize: 24}}>
+                            🚫 Something went wrong ⁉️</Text>}
+
+                
+            </ScrollView>
+          </View>
+      )
     }
 }
 

@@ -1,6 +1,7 @@
-import { createStore, compose } from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
 import { reactReduxFirebase } from 'react-redux-firebase';
 import { AsyncStorage } from 'react-native';
+import thunkMiddleware from 'redux-thunk';
 
 import AppReducer from './app-reducer';
 import firebase from 'firebase';
@@ -29,8 +30,14 @@ export default function configureStore(initialState, history) {
     const store = createStore(
         AppReducer,
         initialState,
+       
         compose(
             reactReduxFirebase(firebase, rrConfig),
+            applyMiddleware(
+                thunkMiddleware,
+                //loggerMiddleware
+            ),
+            
         )
     );
         

@@ -1,6 +1,8 @@
 
 import *  as firebase from 'firebase';
 
+const msgLocation = 'messages';
+
 export const addMessage = (msg) => ({
     type: 'ADD_MESSAGE',
     ...msg
@@ -18,7 +20,7 @@ export const sendMessage = (text, user) => {
             };
 
         const newMsgRef = firebase.database()
-                                  .ref('messages')
+                                  .ref(msgLocation)
                                   .push();
         msg.id = newMsgRef.key;
         newMsgRef.set(msg);
@@ -37,12 +39,18 @@ export const receivedMessages = () => ({
     receivedAt: Date.now()
 });
 
-export const fetchMessages = () => {
+
+export const groupLocation = (location) => {
+location ? msgLocation = '/groups/'+location+'/messages' : msgLocation
+ console.log('message location: ' + msgLocation);
+};
+
+export const fetchMessages  = () => {
     return function (dispatch) {
         dispatch(startFetchingMessages());
 
         firebase.database()
-                .ref('messages')
+                .ref(msgLocation)
                 .orderByKey()
                 .limitToLast(20)
                 .on('value', (snapshot) => {

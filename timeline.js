@@ -12,9 +12,6 @@ import {
 import { Avatar, Icon, List, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { firebaseConnect, populate } from 'react-redux-firebase';
-import md5 from 'blueimp-md5';
-import { setUserName, setUserAvatar, startChatting } from './src/actions';
-import user from './src/reducers/user';
 
 const populates = [{
      child: 'user_id', root: 'profiles'
@@ -32,6 +29,9 @@ const populates = [{
     })
   )
 export default class TimelineScreen extends Component {
+    constructor(props) {
+        super(props)
+    }
     static navigationOptions = ({ navigation }) => ({
         title: 'Recent Events',
         headerRight: <Button
@@ -132,13 +132,16 @@ export default class TimelineScreen extends Component {
                    )
                    listItem = (
                     <ListItem
+                    containerStyle={{backgroundColor: '#ffa64e', borderRadius: 15}}
                     roundAvatar
                     avatar={{uri: post.user_id.photoURL}}
+                    titleStyle={{color: 'white'}}
+                    subtitleStyle={{color: 'white'}}
                     title={post.event_name}
                     subtitle={'By: ' + post.user_id.username}
-                    rightIcon={{name: 'chevron-right', color: 'orange'}}
+                    rightIcon={{name: 'chevron-right', color: 'white'}}
                     rightTitle='view more details'
-                    rightTitleStyle={{color: 'orange'}}
+                    rightTitleStyle={{color: 'white'}}
                     onPress={() => this.props.navigation.navigate('Post', {post})}
                     >
                     </ListItem>
@@ -177,7 +180,7 @@ export default class TimelineScreen extends Component {
                 return (
                     <View 
                     key={i} 
-                    style={{padding: 10, marginBottom: 25, borderRadius:25, backgroundColor: '#FFF'}}
+                    style={{padding: 10, marginBottom: 25, borderRadius:25, backgroundColor: '#c4e2ff'}}
                     >
                         
                         
@@ -190,7 +193,8 @@ export default class TimelineScreen extends Component {
                                 {displayAvatar} 
                             </ImageBackground>
                         
-                        <List>
+                        <List containerStyle={{borderRadius: 20}}>
+                                
                                 {listItem}
                             
                         </List>
@@ -215,14 +219,14 @@ export default class TimelineScreen extends Component {
             <View>
 
             <Text style={{paddingTop: Dimensions.get('window').height*.25, justifyContent: 'center',textAlign: 'center', fontStyle: 'italic', fontSize: 32}}>
-                There are no events...
+                There are no events 😱
             </Text>
 
             </View>
             )
         }
         return( 
-            <ScrollView>
+            <ScrollView style={{backgroundColor: '#ffbf00'}}>
                 {posts}
             </ScrollView>
         );

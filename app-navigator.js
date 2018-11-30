@@ -15,6 +15,8 @@ import PostDetailScreen from './post-detail';
 import ProfileScreen from './profile';
 import EventDetailScreen from './event-detail';
 import MessengerScreen from './messenger';
+import ChatUI from './src/components/ChatUI';
+import ReceivedRequestScreen from './receivedrequest';
 
 const TimelineNavigator = createStackNavigator({
   Timeline: { screen: TimelineScreen },
@@ -28,8 +30,10 @@ TimelineNavigator.navigationOptions = {
 
 const ProfileNavigator = createStackNavigator({
   Profile: { screen: ProfileScreen },
-  AddContacts: { screen: AddContactsScreen }
-}, {mode: "modal"});
+  AddContacts: { screen: AddContactsScreen },
+  ReceivedRequestScreen: { screen: ReceivedRequestScreen},
+
+});
 ProfileNavigator.navigationOptions = {
   title: 'Profile',
   tabBarIcon: ({ tintColor }) => <Icon color={tintColor} name="account-box" />
@@ -37,9 +41,10 @@ ProfileNavigator.navigationOptions = {
 
 const MessengerNavigator = createStackNavigator({
   Messages: { screen: MessengerScreen },
+  ChatUI: { path: 'group/:group_id', screen: ChatUI },
 });
 MessengerNavigator.navigationOptions = {
-  title: 'Event Messenger',
+  title: 'Messenger',
   tabBarIcon: ({ tintColor }) => <Icon color={tintColor} name="message" />
 };
 
@@ -47,8 +52,8 @@ MessengerNavigator.navigationOptions = {
 
 const MainNavigator = createBottomTabNavigator({
   Home: { screen: TimelineNavigator },
-  Profile: { screen: ProfileNavigator },
   Messenger: { screen: MessengerNavigator},
+  Profile: { screen: ProfileNavigator },
 });
 
 @firebaseConnect()

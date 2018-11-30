@@ -9,6 +9,7 @@ export default class LoginScreen extends Component {
         isLoading: false,
         isSignup: false,
         database: firebase.database(),
+        initials: null,
     };
     
 render() {
@@ -122,9 +123,11 @@ _performSignup() {
            this.state.database.ref('profiles/' + firebase.auth().currentUser.uid).set({
             username: name,
             following: 0,
+            message_groups: 0,
             posts: 0,
             email: email,
             photoURL: "",
+            profile_stats: {received_request: 0, sent_request:0},
             initials: this._getInitials(),
            })
            //save credentials function
@@ -167,5 +170,31 @@ _performSignup() {
             actions: [NavigationActions.navigate({ routeName: 'Main'})]
         }));
     });
+ }
+
+ _getInitials(){
+      //set states
+      let { name } = this.state;
+      
+      var n = name.split(' '); //split the first and last name where there is a space " "
+
+      if(n.length > 1){
+
+      var fInitial = n[0].slice(0, 1); // get first initial of first name
+      
+      var lInitial = n[1].slice(0, 1); // get first initial of last name
+      
+      this.state.initials=fInitial+lInitial;
+
+      return this.state.initials
+    }else{
+        
+        var fInitial = n[0].slice(0, 1); // get first initial of first name
+
+        this.state.initials=fInitial;
+        
+        return this.state.initials
+    }
+    
  }
 }   

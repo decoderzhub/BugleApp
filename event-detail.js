@@ -3,7 +3,7 @@ import { View, Alert, Dimensions, ScrollView, Platform } from 'react-native';
 import { FormLabel, FormInput, Button, FormValidationMessage, Tooltip, Text } from 'react-native-elements';
 import { MapView, ImagePicker, Permissions, Location } from 'expo';
 import { connect } from 'react-redux';
-import { StackActions, NavigationActions } from 'react-navigation'
+import { StackActions, NavigationActions } from 'react-navigation';
 import { firebaseConnect, populate } from 'react-redux-firebase';
 import * as firebase from 'firebase';
 
@@ -24,7 +24,7 @@ const populates = [{ //child of root to query from firebase db
    })
  )
 export default class EventDetailScreen extends Component {
-    
+        
         state = { 
             database: firebase.database(),
             photoAdded: false,  //photo not added button shows add photo
@@ -50,7 +50,6 @@ export default class EventDetailScreen extends Component {
                 longitudeDelta: 0.008883477549531449  //zoom level
             },
         }
-        
 
     //navigation not used maybe implement later
     static navigationOptions = ({ navigation }) => ({  
@@ -137,10 +136,12 @@ export default class EventDetailScreen extends Component {
             this.setState({region});
         }
     }
+
       //show's coordinates of the region selected by user real-time
       onRegionChange(region) {  
         console.log(region);
       }
+      
      //lastly get's location and posts to firebase db.
     async _getLocationAsync(){
         console.log('running get location async')        
@@ -150,8 +151,11 @@ export default class EventDetailScreen extends Component {
         let postal = await Location.reverseGeocodeAsync({
             latitude: this.state.region.latitude, longitude: this.state.region.longitude}) 
         //console.log("postal: " + JSON.stringify(postal)) 
-        // post to firebase db with push
-        this.props.firebase.push('/posts', { 
+        // post to firebase db with update with same key
+        // Get a key for a new Post, Message Group.
+        var newPostKey = firebase.database().ref().child('/posts').push().key;
+        
+        this.props.firebase.update('/posts/'+newPostKey, { 
             user_id: this.props.auth.uid,  // user_uid
             event_name: this.state.name, //event name
             event_description: this.state.eventDescription, //event description
@@ -163,6 +167,53 @@ export default class EventDetailScreen extends Component {
             created_at: (new Date()).getTime(),  //date created
             image: this.state.image,  // image location
             location: `${postal[0].city}`+', '+`${postal[0].region}`,  //object city, state
+            group_id: newPostKey,
+            id: this.props.auth.uid,
+            created_by: firebase.auth().currentUser.displayName
+        })
+        //see if this already exist?
+        if(this.state.database.ref('/profiles/'+firebase.auth().currentUser.uid+'/message_groups/'+this.state.name))
+        {
+            console.log('this post does exist');
+        }else{
+            console.log('this post doesn\'t exists');
+        }
+
+        //create message group meta data under profile
+        this.props.firebase.update('/profiles/'+firebase.auth().currentUser.uid+'/message_groups/', {
+            event_name: this.state.name,
+            created_at: (new Date()).getTime(),
+        })
+
+        //create new message group approved user list
+        this.props.firebase.update('/message_groups/'+newPostKey, {
+            user_id: firebase.auth().currentUser.uid,
+            group_name: this.state.name,
+            sent_request: 0,
+            received_request: 0,
+            created_at: (new Date()).getTime(),
+            group_key: newPostKey,
+            approved_users: {0:{name : firebase.auth().currentUser.displayName}},
+        })
+
+        //create group with key
+        this.props.firebase.update('/groups/'+newPostKey, {
+            group_key: newPostKey,
+            user_id: firebase.auth().currentUser.uid,
+            group_name: this.state.name,
+            created_at: (new Date()).getTime(),
+        })
+
+        //create nested messages under group with welcome message
+        this.props.firebase.update('/groups/'+newPostKey+'/messages/'+newPostKey, {
+            author:{
+                avatar: firebase.auth().currentUser.photoURL,
+                name: firebase.auth().currentUser.displayName
+            },
+            id: newPostKey,
+            text: "Welcome to " + this.state.name + "!!!",
+            time: (new Date()).getTime()
+            
         })
         //updates the post count
         .then(this._updatePostCount(this.state.name))
@@ -241,7 +292,7 @@ render() {
                 onChangeText={(value) => this.setState({ name: value})}
                 value={this.state.name}
                 autoCapitalize='words'
-                autoFocus={true}
+                autoFocus={false}
                 onSubmitEditing={() => { this.secondTextInput.focus(); }}
                 returnKeyType='next'
                 />
