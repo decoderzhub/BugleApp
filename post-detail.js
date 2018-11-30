@@ -93,11 +93,11 @@ _updatePostCount() {
     firebase.database().ref('/profiles');
     if(Object.keys(this.props.profile.posts).length == 1)
     {
-        this.props.firebase.remove('/profiles/'+ this.props.auth.uid +'/posts/0') 
+        this.props.firebase.remove('/profiles/'+ this.props.auth.uid +'profile_stats/posts/0') 
         .then((result) => console.log('post deleted '+ result));
         
     }else{
-        this.props.firebase.remove('/profiles/'+ this.props.auth.uid +'/posts/'+ (Object.keys(this.props.profile.posts).length - 1).toString()) 
+        this.props.firebase.remove('/profiles/'+ this.props.auth.uid +'profile_stats/posts/'+ (Object.keys(this.props.profile.posts).length - 1).toString()) 
         .then((result) => console.log('post deleted '+ result));
 
     }

@@ -22,7 +22,6 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "CFBundleDisplayName": "BugleApp"
     }
   }
 }

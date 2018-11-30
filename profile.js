@@ -98,8 +98,8 @@ _uploadImage = async (uri, imageName) => {
 
  render(){
      let name = this.props.profile ? this.props.profile.username : 'Anonymous';
-     let follow = this.props.profile && this.props.profile.following ? Object.keys(this.props.profile.following).length : 0;
-     let posts = this.props.profile.posts ? Object.keys(this.props.profile.posts).length : 0;
+     let follow = this.props.profile.profile_stats.following && this.props.profile.profile_stats.following ? Object.keys(this.props.profile.profile_stats.following).length : 0;
+     let posts = this.props.profile.profile_stats.posts ? Object.keys(this.props.profile.profile_stats.posts).length : 0;
      let received_request = this.props.profile.profile_stats.received_request ? Object.keys(this.props.profile.profile_stats.received_request).length : 0;
      let sent_request = this.props.profile.profile_stats.sent_request ? Object.keys(this.props.profile.profile_stats.sent_request).length : 0;
      let displayAvatar = null;

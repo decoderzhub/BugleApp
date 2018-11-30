@@ -122,12 +122,10 @@ _performSignup() {
            //add user to the database with initial parameters
            this.state.database.ref('profiles/' + firebase.auth().currentUser.uid).set({
             username: name,
-            following: 0,
-            message_groups: 0,
-            posts: 0,
             email: email,
             photoURL: "",
-            profile_stats: {received_request: 0, sent_request:0},
+            profile_stats: {received_request: 0, sent_request:0, 
+                            following: 0, posts: 0,},
             initials: this._getInitials(),
            })
            //save credentials function

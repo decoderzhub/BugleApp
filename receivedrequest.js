@@ -40,7 +40,6 @@ componentDidMount() {
     let r = this.props.profile.profile_stats.received_request
     if(this.props.navigation.state.params.received_request != 0){
 
-        console.log('error is here');
     if(this.props.navigation.state.params.received_request > 0)
     {
         if(r !== undefined)
@@ -50,7 +49,6 @@ componentDidMount() {
                  if(!name.photoURL || !name.user || !name.event_name){
                      return
                  }
-               //requests = Object.values(requester).toString()
                 request = (    
                             <ListItem 
                                  containerStyle={{width: 300, borderRadius: 10, backgroundColor: '#ffa64e'}}
