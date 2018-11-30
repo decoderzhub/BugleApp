@@ -10,7 +10,8 @@ const populates = [{
 }]
 
 @firebaseConnect([
-   { path: '/message_groups', queryParams: ['orderByChild=created_at', 'limitToLast=10'], populates}
+    { path: '/message_groups', queryParams: ['orderByChild=created_at'], populates},
+    { path: '/profiles', queryParams: ['orderByChild=created_at'], populates}
 ])  
 @connect(
    ({ firebase}) => ({
@@ -37,42 +38,46 @@ componentDidMount() {
  render(){
     let request = null;
     let r = this.props.profile.profile_stats.received_request
+    if(this.props.navigation.state.params.received_request != 0){
+
+        console.log('error is here');
     if(this.props.navigation.state.params.received_request > 0)
     {
+        if(r !== undefined)
+        {
+            request  =  Object.values(r).map((name, i) => {
+             console.log(name)
+                 if(!name.photoURL || !name.user || !name.event_name){
+                     return
+                 }
+               //requests = Object.values(requester).toString()
+                request = (    
+                            <ListItem 
+                                 containerStyle={{width: 300, borderRadius: 10, backgroundColor: '#ffa64e'}}
+                                 roundAvatar
+                                 avatar={{uri: name.photoURL}}
+                                 titleStyle={{textAlign: 'center', color: 'white'}}
+                                 title={' Approve ' +name.user+' 🤝'}
+                                 subtitleStyle={{textAlign: 'center', color: 'white'}}
+                                 subtitle={'for ' + name.event_name}
+                                 onPress={() => this._approveUser(name)}
+                                 hideChevron
+                                >
+                        
+                        </ListItem>
+                        
+                    
+                    )
+                    return(
+                     <List key={i} containerStyle={{ alignItems: 'center',backgroundColor: '#c4e2ff'}}>
+                       {request}
+                     </List>
+                     )
+                    
+           })
 
-       request  =  Object.values(r).map((name, i) => {
-        console.log(name)
-            
-          //requests = Object.values(requester).toString()
-           request = (    
-                       <ListItem 
-                            containerStyle={{width: 300, borderRadius: 10, backgroundColor: '#ffa64e'}}
-                            roundAvatar
-                            avatar={{uri: name.photoURL}}
-                            titleStyle={{textAlign: 'center', color: 'white'}}
-                            title={' Approve ' +name.user+' 🤝'}
-                            subtitleStyle={{textAlign: 'center', color: 'white'}}
-                            subtitle={'for ' + name.event_name}
-                            onPress={() => this._approveUser(name)}
-                            hideChevron
-                           >
-                   
-                   </ListItem>
-                   
-               
-               )
-               return(
-                <List key={i} containerStyle={{ alignItems: 'center',backgroundColor: '#c4e2ff'}}>
-                  {request}
-                </List>
-                )
-               
-      })
-
-    }else if(this.props.navigation.state.params.received_request < 1)
-    {        
-       
-        request = (
+        }else{
+            request = (
     
                 <ListItem 
                 containerStyle={{backgroundColor: '#ffa64e', borderRadius: 10}}
@@ -84,6 +89,27 @@ componentDidMount() {
                 </ListItem>
               
                )
+        }
+
+    }else if(this.props.navigation.state.params.received_request < 1)
+    {        
+       
+        
+
+    }
+    }else{
+
+        request = (
+    
+            <ListItem 
+            containerStyle={{backgroundColor: '#ffa64e', borderRadius: 10}}
+            titleStyle={{textAlign: 'center', color: 'white'}}
+            title={'no request 😕'}
+            hideChevron
+            >
+                
+            </ListItem>
+        )
 
     }
 
@@ -119,16 +145,30 @@ _approveUser(user) {
 
 }
 _removeSentRequest(user, key){
-    this.props.firebase.remove('/profiles/'+ user.user_id +'/profile_stats/sent_request/'+key)
-    .then((result) => {
-        console.log(result);
-    })
+    //see if this already exist?
+    if(this.state.database.ref('/profiles/'+ user.user_id +'/profile_stats/sent_request/'+key))
+    {
+        console.log('this sent_request does exist');
+        this.props.firebase.remove('/profiles/'+ user.user_id +'/profile_stats/sent_request/'+key)
+        .then((result) => {
+            console.log(result);
+        })
+    }else{
+        console.log('this sent_request doesn\'t exists');
+    }
 }
 _removeReceivedRequest(key){
-    this.props.firebase.remove('/profiles/'+ firebase.auth().currentUser.uid +'/profile_stats/received_request/'+key)
-    .then((result) => {
-        console.log(result);
-    })
+    //see if this already exist?
+    if(this.state.database.ref('/profiles/'+ firebase.auth().currentUser.uid +'/profile_stats/received_request/'+key))
+    {
+        console.log('this received_request does exist');
+        this.props.firebase.remove('/profiles/'+ firebase.auth().currentUser.uid +'/profile_stats/received_request/'+key)
+        .then((result) => {
+            console.log(result);
+        })
+    }else{
+        console.log('this received_request doesn\'t exists');
+    }
 }
 
 _updateReceivedRequestList(user) {
@@ -172,7 +212,10 @@ _addUsertoGroup(user){
                 let createGroup = {name: user.user}
                 messageGroup.push(createGroup);
                 updates['/message_groups/' + user.group_key +'/approved_users'] = messageGroup;
-                self.state.database.ref().update(updates);     
+                self.state.database.ref().update(updates);    
+                updates = null;
+                messageGroup = null;
+                createGroup = null; 
             })
         });
     })
