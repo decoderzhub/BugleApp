@@ -53,7 +53,10 @@ componentDidMount() {
                             <ListItem 
                                  containerStyle={{width: 300, borderRadius: 10, backgroundColor: '#ffa64e'}}
                                  roundAvatar
-                                 avatar={{uri: name.photoURL}}
+                                 avatar={{uri: name.photoURL ? name.photoURL : <Avatar
+                                    rounded
+                                    title={name.initials}
+                                  />}}
                                  titleStyle={{textAlign: 'center', color: 'white'}}
                                  title={' Approve ' +name.user+' 🤝'}
                                  subtitleStyle={{textAlign: 'center', color: 'white'}}

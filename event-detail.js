@@ -207,7 +207,7 @@ export default class EventDetailScreen extends Component {
         //create nested messages under group with welcome message
         this.props.firebase.update('/groups/'+newPostKey+'/messages/'+newPostKey, {
             author:{
-                avatar: firebase.auth().currentUser.photoURL,
+                avatar: "https://firebasestorage.googleapis.com/v0/b/bugleapp-4b94d.appspot.com/o/images%2FBugleImages%2FBugle%20Icon%203.png?alt=media&token=4d975acb-a186-410a-b3fe-0ad0805e25e6",
                 name: firebase.auth().currentUser.displayName
             },
             id: newPostKey,

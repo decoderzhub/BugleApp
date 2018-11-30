@@ -153,7 +153,8 @@ _updatePostCount() {
                         user: firebase.auth().currentUser.displayName,
                         photoURL: firebase.auth().currentUser.photoURL,
                         event_name: this.state.postEventName,
-                        group_key: this.props.navigation.state.params.post.group_id
+                        group_key: this.props.navigation.state.params.post.group_id,
+                        initials: this.props.profile.initials
                     });
         let mr = {event_name: this.props.navigation.state.params.post.event_name, 
                     created_by: this.props.navigation.state.params.post.created_by,
