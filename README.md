@@ -14,7 +14,6 @@ Users accounts will be added to the firebase authentication console.  Admins can
 
 ## 3. Adding a new event
 Posting events is simple just touch add event and select an image to post a current event.
-### 04-Nov-2018 ====================>05-Nov-2018
 ![bugleeventlow](https://user-images.githubusercontent.com/6371329/47968454-48dc7d00-e038-11e8-80e1-46b3636cf9e6.gif)![bugleaddeventlow](https://user-images.githubusercontent.com/6371329/48029578-8286b400-e11c-11e8-9950-c63d21ddc1ec.gif)
 
 ## 4. Firebase database results in posting a new event
@@ -33,6 +32,11 @@ Users can open the events and see the details of the event
 
 ![buglepostdetailslow](https://user-images.githubusercontent.com/6371329/47968882-e25a5d80-e03d-11e8-8c87-f530d8a69398.gif)
 
+
+## 7. Layout Updates and added Messenger Groups
+Updated the layout view and added messenger groups tab to the middle bottom navigation tab.
+
+![layoutupdateandmessengergroups](https://user-images.githubusercontent.com/6371329/49266215-2fee9e00-f423-11e8-93e6-c21dcf48830e.gif)![buglelayoutupdateandmessengergroupsandroid](https://user-images.githubusercontent.com/6371329/49266786-7513cf80-f425-11e8-8494-9f9447ae1836.gif)
 
 
 ***
@@ -59,11 +63,11 @@ Users can open the events and see the details of the event
 
 9. [X] Fix avatar rounded corner bug on Android devices. (containerSytle and/or parent view style)  20-Nov-18
 
-10. [ ] Show stats for users profile __(following, post, Rx requests, Tx request, credits)__ 
+10. [X] Show stats for users profile __(following, post, Rx requests, Tx request, credits)__ 25-Nov-18
 
 11. [X] Develop messenger groups for created post 25-Nov-18
 
-12. [ ] Allow members to join the group and display group in messenger.
+12. [X] Allow members to join the group and display group in messenger. 29-Nov-18
 
 13. [ ] Develop screen component Received request, Sent request, and Received credits. __(Add to AppNavigator)__
 
@@ -76,7 +80,7 @@ Users can open the events and see the details of the event
 ## Things to do  (long-range)
 1. [ ] App splash screen
 
-2. [ ] Instant Messenger __Working on it..__ 🤯🤯🤯
+2. [X] Instant Messenger __Working on it..__ 🤯🤯🤯 29-Nov-18
 
 3. [ ] Instant Notifications
 
