@@ -107,7 +107,7 @@ export default class TimelineScreen extends Component {
     componentWillReceiveProps(props) {
         const { posts } = this.props;
         if (props.posts !== posts) {
-          console.log("received post!");
+          console.log("updating props...");
         }
       }
 

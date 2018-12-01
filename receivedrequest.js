@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, ScrollView, Alert, Text, Dimensions } from 'react-native';
-import { List, ListItem } from 'react-native-elements';
+import { Avatar, List, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { firebaseConnect, populate } from 'react-redux-firebase';
 import * as firebase from 'firebase';
@@ -46,9 +46,10 @@ componentDidMount() {
         {
             request  =  Object.values(r).map((name, i) => {
              console.log(name)
-                 if(!name.photoURL || !name.user || !name.event_name){
+                 if(!name.user || !name.event_name){
                      return
                  }
+                 if(name.photoURL){
                 request = (    
                             <ListItem 
                                  containerStyle={{width: 300, borderRadius: 10, backgroundColor: '#ffa64e'}}
@@ -69,6 +70,30 @@ componentDidMount() {
                         
                     
                     )
+                }else{
+                    
+                    request = (    
+                                <ListItem 
+                                     containerStyle={{width: 300, borderRadius: 10, backgroundColor: '#ffa64e'}}
+                                     roundAvatar
+                                     avatar={<Avatar
+                                        rounded
+                                        title={name.initials}
+                                      />}
+                                     titleStyle={{textAlign: 'center', color: 'white'}}
+                                     title={' Approve ' +name.user+' 🤝'}
+                                     subtitleStyle={{textAlign: 'center', color: 'white'}}
+                                     subtitle={'for ' + name.event_name}
+                                     onPress={() => this._approveUser(name)}
+                                     hideChevron
+                                    >
+                            
+                            </ListItem>
+                            
+                        
+                        )
+                }
+
                     return(
                      <List key={i} containerStyle={{ alignItems: 'center',backgroundColor: '#c4e2ff'}}>
                        {request}

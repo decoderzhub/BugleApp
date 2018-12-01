@@ -180,10 +180,10 @@ export default class EventDetailScreen extends Component {
         }
 
         //create message group meta data under profile
-        // this.props.firebase.update('/profiles/'+firebase.auth().currentUser.uid+'/message_groups/', {
-        //     event_name: this.state.name,
-        //     created_at: (new Date()).getTime(),
-        // })
+         this.props.firebase.update('/profiles/'+firebase.auth().currentUser.uid+'/message_groups/', {
+             event_name: this.state.name,
+             created_at: (new Date()).getTime(),
+         })
 
         //create new message group approved user list
         this.props.firebase.update('/message_groups/'+newPostKey, {

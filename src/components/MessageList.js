@@ -41,12 +41,16 @@ const Message = ({ msg }) => {
         }
 };
 
-const MessageList = ({ messages, onLayout }) => (
+const MessageList = ({ messages, onLayout}) => {
+    console.log(messages);
+   
+return(
     <ListView data={messages}
+              onRefresh={() => this.onRefresh()}
               autoHideHeader={true}
               renderRow={msg => <Message msg={msg} />}
               onLayout={onLayout}
-              />
-);
+              />)
+};
 
 export default MessageList;

@@ -31,8 +31,7 @@ TimelineNavigator.navigationOptions = {
 const ProfileNavigator = createStackNavigator({
   Profile: { screen: ProfileScreen },
   AddContacts: { screen: AddContactsScreen },
-  ReceivedRequestScreen: { screen: ReceivedRequestScreen},
-
+  ReceivedRequestScreen: { screen: ReceivedRequestScreen },
 });
 ProfileNavigator.navigationOptions = {
   title: 'Profile',

@@ -1,29 +1,42 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ReactNative, { Text as MyText } from 'react-native';
-
+import ReactNative, {Button, Platform, Dimensions, Text as MyText } from 'react-native';
+import { StackActions, NavigationActions } from 'react-navigation';
 import { Screen } from '@shoutem/ui';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Messages from '../containers/Messages';
 import Input from '../containers/Input';
-import { sendMessage, groupLocation } from '../actions';
+import { sendMessage, groupLocation, removeMessages } from '../actions';
 import { Font } from 'expo';
 import { begin, setUserName, setUserAvatar} from '../actions';
 import * as firebase from 'firebase';
+import messages from '../reducers/messages';
 
 const mapStateToProps = (state) => ({
     chatHeight: state.chatroom.meta.height,
-    user: state.user
+    user: state.user,
+    uiState: state
 });
 
-
 class ChatUI extends Component {
+    
+    _displayMessageGroup(){
+        console.log(messages);
+    
+    }
+    
+    static navigationOptions = ({ navigation }) => ({
+        title: 'Chat',
+        headerLeft: <Button title="Back" onPress={() => navigation.goBack()}></Button>
+    });
 
     state = {
         scrollViewHeight: 0,
         inputHeight: 0,
         fontLoaded: false,
+    }
+    componentWillUpdate(){
 
     }
 
@@ -31,9 +44,9 @@ class ChatUI extends Component {
         await Font.loadAsync({
           'Rubik-Regular': require('@shoutem/ui/fonts/Rubik-Regular.ttf')
         });
-        groupLocation(this.props.navigation.state.params.group.group_key)
         this.setState({ fontLoaded: true });
-        this.scrollToBottom(false);
+        this.scrollToBottom(true);
+        groupLocation(this.props.navigation.state.params.group.group_key);
         this.props.dispatch(begin());
         this.props.dispatch(setUserName(firebase.auth().currentUser.displayName));
         this.props.dispatch(setUserAvatar(firebase.auth().currentUser.photoURL));
@@ -45,9 +58,10 @@ class ChatUI extends Component {
 
     onScrollViewLayout = (event) => {
         const layout = event.nativeEvent.layout;
-
+        //console.log(layout) //ios width 375 height 641
+                            // android width 411 height 340 multiply by 2 to get actuall height add 10 for <Input> component
         this.setState({
-            scrollViewHeight: layout.height
+            scrollViewHeight: Platform.OS === 'ios' ? layout.height : (Dimensions.get('window').height * .5) + 50 
         });
     }
 
@@ -109,8 +123,20 @@ class ChatUI extends Component {
                         ) : <MyText> loading... </MyText>
                     }
                 </KeyboardAwareScrollView>
+                <Button 
+                onPress={() => this._showResults()}
+                style={{marginTop: 25}}
+                backgroundColor='#ff0000'
+                title={'Show Results'}/>
             </Screen>
         )
+    }
+
+    _showResults() {
+        console.log(this.props.uiState)
+        this.props.uiState.chatroom.messages.pop()
+        console.log(this.props.uiState)
+        console.log(this.props.dispatch(removeMessages(messages)));
     }
 }
 

@@ -8,7 +8,7 @@ import rootReducer from './src/reducers'
 
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import { groupLocation } from './src/actions';
+import messages from './src/reducers/messages';
 
 const store = createStore(
     rootReducer,
@@ -38,11 +38,13 @@ class MessengerScreen extends Component{
         title: 'Messenger Groups',
     });
 
+
  render(){
         let groups = null;
         let approved = false;
         if (this.props.message_groups)
         {
+        this._performClearList();
          //d = this._discoverGroups();
          //console.log("d = " + d);
             groups = Object.values(this.props.message_groups).map((group, i) =>{            
@@ -111,11 +113,21 @@ class MessengerScreen extends Component{
           </View>
       )
     }
+    //clears the message list
+    async _performClearList() {
+        // asnychronously get the length to remove the elements form the message list
+        let count = await this.props.uiState.chatroom.messages.length;
+        for (let index = 0; index <= count; index++) {
+            this.props.uiState.chatroom.messages.pop();
+        }
+    }
 }
+
 
 const MapStateToProps = (state) => {
     //console.log(state);
     return {
+      uiState: state,
       auth: state.firebase.auth,  // auth passed as props.auth
       profile: state.firebase.profile // profile passed as props.profile
     }

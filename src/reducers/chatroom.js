@@ -12,15 +12,18 @@ const initialState = {
 const meta = (state = initialState, action) => {
     switch (action.type) {
         case 'START_FETCHING_MESSAGES':
+            //console.log('fetching messages....')
             return Object.assign({}, state, {
                 isFetching: true
             });
-        case 'RECEIVED_MESSAGES':
+            case 'RECEIVED_MESSAGES':
+            //console.log('Received Messages....')
             return Object.assign({}, state, {
                 isFetching: false,
                 lastFetched: action.receivedAt
             });
-        case 'UPDATE_MESSAGES_HEIGHT':
+            case 'UPDATE_MESSAGES_HEIGHT':
+            //console.log('Updating Messages Height....')
             return Object.assign({}, state, {
                 height: action.height
             });

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { firebaseConnect } from 'react-redux-firebase';
 import { ImagePicker } from 'expo';
 import * as firebase from 'firebase';
+import { StackActions, NavigationActions} from 'react-navigation';
 
   @firebaseConnect()
 class ProfileScreen extends Component{
@@ -43,7 +44,12 @@ componentDidMount() {
 
 
 _performSignOut = () => {
-
+    this.props.navigation.dispatch(StackActions.reset({
+        index:0,
+        actions: [NavigationActions.navigate({ routeName: 'Main'})]
+    }));
+        firebase.auth().signOut();
+      
 }
 //pick image from library asynchronously
 _pickImage = async () => {      // picks image from device
