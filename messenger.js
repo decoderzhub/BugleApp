@@ -34,17 +34,20 @@ const populates = [{
    })
  )
 class MessengerScreen extends Component{
+    constructor(props) {
+        super(props);
+    }
     static navigationOptions = ({ navigation }) => ({
         title: 'Messenger Groups',
     });
 
+    
 
  render(){
         let groups = null;
         let approved = false;
         if (this.props.message_groups)
         {
-        this._performClearList();
          //d = this._discoverGroups();
          //console.log("d = " + d);
             groups = Object.values(this.props.message_groups).map((group, i) =>{            
@@ -112,14 +115,6 @@ class MessengerScreen extends Component{
             </ScrollView>
           </View>
       )
-    }
-    //clears the message list
-    async _performClearList() {
-        // asnychronously get the length to remove the elements form the message list
-        let count = await this.props.uiState.chatroom.messages.length;
-        for (let index = 0; index <= count; index++) {
-            this.props.uiState.chatroom.messages.pop();
-        }
     }
 }
 

@@ -20,13 +20,23 @@ const mapStateToProps = (state) => ({
 });
 
 class ChatUI extends Component {
-    
-    _displayMessageGroup(){
-        console.log(messages);
+    constructor(props){
+        super(props);
+        this._performClearList();
+    }
+    //clears the message list
+    async _performClearList() {
+        let count = this.props.uiState.chatroom.messages.length;
+        // asnychronously get the length to remove the elements form the message list
+            for (let index = 0; index <= count - 1; index++) {
+                this.props.uiState.chatroom.messages.pop();
+                this.props.uiState.chatroom.messages.length;
+            }
     
     }
+
     
-    static navigationOptions = ({ navigation }) => ({
+    navigationOptions = ({ navigation }) => ({
         title: 'Chat',
         headerLeft: <Button title="Back" onPress={() => navigation.goBack()}></Button>
     });
@@ -123,20 +133,8 @@ class ChatUI extends Component {
                         ) : <MyText> loading... </MyText>
                     }
                 </KeyboardAwareScrollView>
-                <Button 
-                onPress={() => this._showResults()}
-                style={{marginTop: 25}}
-                backgroundColor='#ff0000'
-                title={'Show Results'}/>
             </Screen>
         )
-    }
-
-    _showResults() {
-        console.log(this.props.uiState)
-        this.props.uiState.chatroom.messages.pop()
-        console.log(this.props.uiState)
-        console.log(this.props.dispatch(removeMessages(messages)));
     }
 }
 

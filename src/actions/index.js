@@ -40,7 +40,6 @@ export const receivedMessages = () => ({
     receivedAt: Date.now()
 });
 
-
 export const groupLocation = (key) => {
     groupKey = key;
     key ? msgLocation = '/groups/'+key+'/messages' : msgLocation;

@@ -41,12 +41,9 @@ const Message = ({ msg }) => {
         }
 };
 
-const MessageList = ({ messages, onLayout}) => {
-    console.log(messages);
-   
-return(
+const MessageList = ({ messages, onLayout}) => {   
+    return(
     <ListView data={messages}
-              onRefresh={() => this.onRefresh()}
               autoHideHeader={true}
               renderRow={msg => <Message msg={msg} />}
               onLayout={onLayout}
