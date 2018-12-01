@@ -36,7 +36,7 @@ class ChatUI extends Component {
     }
 
     
-    navigationOptions = ({ navigation }) => ({
+    static navigationOptions = ({ navigation }) => ({
         title: 'Chat',
         headerLeft: <Button title="Back" onPress={() => navigation.goBack()}></Button>
     });
