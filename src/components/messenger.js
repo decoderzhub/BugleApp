@@ -4,11 +4,11 @@ import { Provider, connect } from 'react-redux';
 import { List, ListItem } from 'react-native-elements';
 import { firebaseConnect, populate } from 'react-redux-firebase';
 import * as firebase from 'firebase';
-import rootReducer from './src/reducers'
+import rootReducer from '../reducers'
 
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import messages from './src/reducers/messages';
+import messages from '../reducers/messages';
 
 const store = createStore(
     rootReducer,

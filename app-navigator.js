@@ -8,15 +8,15 @@ import * as firebase from 'firebase';
 import { firebaseConnect } from 'react-redux-firebase';
 import { connect } from 'react-redux';
 
-import AddContactsScreen from './add-contacts';
-import LoginScreen from './login';
-import TimelineScreen from './timeline';
-import PostDetailScreen from './post-detail';
-import ProfileScreen from './profile';
-import EventDetailScreen from './event-detail';
-import MessengerScreen from './messenger';
+import AddContactsScreen from './src/components/add-contacts';
+import LoginScreen from './src/components/login';
+import TimelineScreen from './src/components/timeline';
+import PostDetailScreen from './src/components/post-detail';
+import ProfileScreen from './src/components/profile';
+import EventDetailScreen from './src/components/event-detail';
+import MessengerScreen from './src/components/messenger';
 import ChatUI from './src/components/ChatUI';
-import ReceivedRequestScreen from './receivedrequest';
+import ReceivedRequestScreen from './src/components/receivedrequest';
 
 const TimelineNavigator = createStackNavigator({
   Timeline: { screen: TimelineScreen },
