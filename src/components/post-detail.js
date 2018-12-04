@@ -60,6 +60,7 @@ export default class PostDetailScreen extends Component {
             }
         })
     }
+    console.log(this.props.navigation.state.params.post.user_id.profile_stats.received_request);
    }
 
    //get a snapshot and key of the posts that match the one selected
@@ -148,6 +149,7 @@ _updatePostCount() {
     _sendRequest(uid) {
         let updates = {};
         let request = this.props.navigation.state.params.post.user_id.profile_stats.received_request || [];
+        console.log(request);
         let myrequest = this.props.profile.profile_stats.sent_request || [];
         request.push({user_id: firebase.auth().currentUser.uid,
                         user: firebase.auth().currentUser.displayName,

@@ -31,10 +31,6 @@ class ReceivedRequestScreen extends Component{
         database: firebase.database(),
     }
 
-componentDidMount() {
-
-}
-
  render(){
     let request = null;
     let r = this.props.profile.profile_stats.received_request
@@ -200,7 +196,7 @@ _removeReceivedRequest(key){
 _updateReceivedRequestList(user) {
     var ref = firebase.database().ref("/profiles/"+firebase.auth().currentUser.uid+'/profile_stats');    
     var query = ref.child("received_request");
-    var self = this; //scope of the variable to be accessed outside of local function .foreach()
+    var self = this; //scope of the variable to be accessed outside of local nested function
     var requestData = [];
     query.once("value",(snapshot) => {
         snapshot.forEach((childSnapshot) => {
@@ -220,10 +216,9 @@ _updateReceivedRequestList(user) {
 }
 
 _addUsertoGroup(user){
-    //get a snapshot and key of the posts that match the one selected
     var ref = firebase.database().ref("/message_groups");    
     var query = ref.orderByChild('created_at');
-    var self = this; //scope of the variable to be accessed outside of local function .foreach()
+    var self = this;
     var requestData = [];
     query.once("value",(snapshot) => {
         snapshot.forEach((childSnapshot) => {
@@ -249,10 +244,9 @@ _addUsertoGroup(user){
 }
 
 _sendApproval(user){
-    //get a snapshot and key of the posts that match the one selected
     var ref = firebase.database().ref("/profiles/"+user.user_id+'/profile_stats');    
     var query = ref.child("sent_request");
-    var self = this; //scope of the variable to be accessed outside of local function .foreach()
+    var self = this;
     var requestData = [];
     query.once("value",(snapshot) => {
         snapshot.forEach((childSnapshot) => {

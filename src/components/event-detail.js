@@ -239,7 +239,7 @@ export default class EventDetailScreen extends Component {
     //updates the count of post on firebase db
     _updatePostCount(eventName) {
         let updates = {};
-        let posts = this.props.profile.posts || [];
+        let posts = this.props.profile.profile_stats.posts || [];
         posts.push(eventName);
         updates['/profiles/' + this.props.auth.uid + '/profile_stats/posts'] = posts;
         this.state.database.ref().update(updates);
