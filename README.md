@@ -87,7 +87,7 @@ Profile Stats Change and update in real-time and profile picture will display in
 
 5. [X] Marker on event location.  05-nov-18 
 
-6. [ ] Post Event Details need to populate on screen with supplied information.
+6. [ ] Post Event Details need to populate on screen with supplied information. __projected__ (11-Aug-19)
 
 7. [X] Event details needs start time field and hours of credit volunteers will receive. 20-Nov-18
 
@@ -103,7 +103,7 @@ Profile Stats Change and update in real-time and profile picture will display in
 
 13. [ ] Develop screen component Received request, Sent request, and Received credits. __(Add to AppNavigator)__
 
-14. [ ] Allow user to un-join events removing user from chat-group and updating database.
+14. [ ] Allow user to un-join events removing user from chat-group and updating database. __projected__ (18-Aug-19)
 
 
  
