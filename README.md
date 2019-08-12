@@ -73,6 +73,13 @@ Profile Stats Change and update in real-time and profile picture will display in
 
 ***
 
+## 10. Post Details
+Post details allows for the user to view the post details and join or delete if they are the event host.
+
+<img width="990" alt="bugleprofilescreen3x" src="https://user-images.githubusercontent.com/6371329/49268172-f4a49d00-f42b-11e8-856d-cbd142b109cc.png">
+
+***
+
 # Milestones 
 
 ## Things to do (short-range):
@@ -87,7 +94,7 @@ Profile Stats Change and update in real-time and profile picture will display in
 
 5. [X] Marker on event location.  05-nov-18 
 
-6. [ ] Post Event Details need to populate on screen with supplied information. __projected__ (11-Aug-19)
+6. [X] Post Event Details need to populate on screen with supplied information. __projected__ (11-Aug-19)
 
 7. [X] Event details needs start time field and hours of credit volunteers will receive. 20-Nov-18
 
