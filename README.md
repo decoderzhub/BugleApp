@@ -76,7 +76,8 @@ Profile Stats Change and update in real-time and profile picture will display in
 ## 10. Post Details
 Post details allows for the user to view the post details and join or delete if they are the event host.
 
-<img width="990" alt="bugleprofilescreen3x" src="https://user-images.githubusercontent.com/6371329/49268172-f4a49d00-f42b-11e8-856d-cbd142b109cc.png">
+![screencast 2019-08-12 19-12-21](https://user-images.githubusercontent.com/6371329/62904659-3b75c100-bd35-11e9-800e-de8b0f921e34.gif)
+
 
 ***
 
