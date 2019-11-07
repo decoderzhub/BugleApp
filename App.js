@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
-import { Provider } from 'react-redux';
-
-import createStore from './store';
-import AppWithNavigationState from './app-navigator';
+import React, { Component } from "react";
+import { Provider } from "react-redux";
+import createStore from "./store";
+import AppWithNavigationState from "./app-navigator";
 
 const store = createStore();
 
 class Root extends Component {
-
   render() {
-    return(
+    return (
       <Provider store={store}>
         <AppWithNavigationState />
       </Provider>
@@ -17,4 +15,4 @@ class Root extends Component {
   }
 }
 
-export default Root
+export default Root;

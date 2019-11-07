@@ -115,6 +115,11 @@ export const startChatting = function(dispatch) {
   dispatch(fetchMessages());
 };
 
+export const signedStatus = status => ({
+  type: "USER_SIGNED_STATUS",
+  signedStatus: status
+});
+
 export const startAuthorizing = () => ({
   type: "USER_START_AUTHORIZING"
 });

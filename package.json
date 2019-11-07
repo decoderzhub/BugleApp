@@ -3,21 +3,21 @@
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "scripts": {
+    "postinstall": "sh ./fix.sh",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "eject": "expo eject"
   },
   "dependencies": {
-
-    "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
-    "expo": "^31.0.0",
-    "react": "16.5.0",
-    "@shoutem/ui": "^0.23.9",
+    "@shoutem/ui": "^0.23.12",
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
     "blueimp-md5": "^2.10.0",
+    "expo": "^33.0.0",
     "firebase": "^5.5.5",
     "moment": "^2.22.2",
+    "react": "16.6.0-alpha.8af6728",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-easy-grid": "^0.2.0",
     "react-native-elements": "^0.19.1",
     "react-native-keyboard-aware-scroll-view": "^0.7.4",
@@ -26,6 +26,7 @@
     "react-redux-firebase": "^2.1.8",
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "sharp-cli": "1.10.0"
   }
 }

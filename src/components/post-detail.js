@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Text, View, Alert } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Text, View, Alert, ScrollView, Dimensions } from 'react-native';
+import { Button, Avatar, List, ListItem } from 'react-native-elements';
 import * as firebase from 'firebase';
 import { connect } from 'react-redux';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { firebaseConnect, populate } from 'react-redux-firebase'
+import { Grid, Row, Col } from "react-native-easy-grid";
+import { MapView, Permissions, Location } from 'expo';
 
 const populates = [{ //child of root to query from firebase db
     child: 'user_id', root: 'profiles'   
@@ -12,7 +14,7 @@ const populates = [{ //child of root to query from firebase db
 
 @firebaseConnect()
 @connect(  
-    ({ firebase}) => ({
+    ({ firebase }) => ({
         auth: firebase.auth,  // auth passed as props.auth
         profile: firebase.profile, // profile passed as props.profile   
         posts: populate(firebase, 'posts', populates), //all posts from fb db     
@@ -22,18 +24,26 @@ export default class PostDetailScreen extends Component {
     constructor(props){
         super(props);
         console.log(this.props.auth);
+        console.log("CHECK HERE!!!!")
         console.log(this.props.navigation.state.params.post);
     }
     state = {
         database: firebase.database(),
+        postInfo: this.props.navigation.state.params.post,
         postUserId: this.props.navigation.state.params.post.user_id,
         postEmail: this.props.navigation.state.params.post.user_id.email,
         postEventName: this.props.navigation.state.params.post.event_name,
         postId: [],
-        imageName: this.props.navigation.state.params.post.event_name,
+        imageName: this.props.navigation.state.params.post.photoURL,
         exists: false,
         request: this.props.navigation.state.params.post.user_id.profile_stats.received_request ?
         this.props.navigation.state.params.post.user_id.profile_stats.received_request : null ,
+        region: {  // initial location of MapView and Marker
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0052720501213840976,  //zoom level
+            longitudeDelta: 0.008883477549531449  //zoom level
+        },
     }
     static navigationOptions = {
         title: 'Event Details'
@@ -104,7 +114,17 @@ _updatePostCount() {
     }
     this._removeImage();
 }
+_avatarURL() {
+     console.log(this.props.navigation.state.params.post.user_id.photoURL);
+    if (!this.props.navigation.state.params.post.user_id.photoURL) {
+      //return user initials as photo like slack
+      return null;
+    } else {
+      return this.props.navigation.state.params.post.user_id.photoURL;
+    }
+  }
 
+  
 
     //remove photo from firebase file storage
     _removeImage = async () => {
@@ -192,16 +212,111 @@ _updatePostCount() {
     render() {
         console.log(this.props.auth.uid)
         let joinedButton = null;
-        
+        let displayAvatar = null;
+        if (this._avatarURL()) {
+        displayAvatar = (
+          <Avatar
+            xlarge
+            rounded
+            source={{ uri: this._avatarURL() }}
+            containerStyle={{
+              borderRadius: 25,
+              marginTop: 5,
+              marginVertical: 10
+            }}
+            //onPress={() => this.props.navigation.state.params.showImagePicker()}
+          />
+        );
+      } else {
+        displayAvatar = (
+          <Avatar
+            xlarge
+            rounded
+            title={this.props.profile.initials}
+            containerStyle={{ marginTop: 5, marginVertical: 10 }}
+            //onPress={() => this.props.navigation.state.params.showImagePicker()}
+          />
+        );
+      }
         
         return(
-            <View>
-                <Text>
+            <ScrollView style={{ backgroundColor: "#ffbf00" }}>
+            <Grid style={{ backgroundColor: "#ffbf00" }}>
+          <Col style={{ alignItems: "center"}}>
+          <Col  style={{ alignItems: "center"}}>
+          <Text style={{ fontSize: 18, marginTop: 5 }}>{"Hosted By: "+this.props.navigation.state.params.post.created_by}</Text>
+            {displayAvatar}
+          </Col >
+                <Text style={{ fontSize: 18, marginTop: 5, marginBottom: 10, }}>{this.props.navigation.state.params.post.event_name + " Location"}</Text>
+                <MapView
+                style={{ height: 300, width: Dimensions.get('window').width, borderRadius: 25 }}
+                region={this.state.region}
+                //onRegionChange={this.onRegionChange}
+            >
+                <MapView.Marker
+                title={this.state.postEventName}
+                description={this.props.navigation.state.params.post.event_description}
+                coordinate={{latitude: this.props.navigation.state.params.post.map_region.latitude, longitude: this.props.navigation.state.params.post.map_region.longitude}}
+                />
+            </MapView>
+            
+            <Row>
+              <Col>
+                <List>
+                <ListItem
+                    // badge={{
+                    //   value: "Test",
+                    //   textStyle: { color: "#ffbf00" },
+                    //   containerStyle: { marginRight: 55 }
+                    // }}
+                    title={"Location: " + this.state.postInfo.location}
+                    titleStyle={{ textAlign: "left" }}
+                    hideChevron
+                  />
+                <ListItem
+                    // badge={{
+                    //   value: "Test",
+                    //   textStyle: { color: "#ffbf00" },
+                    //   containerStyle: { marginRight: 55 }
+                    // }}
+                    title={"Address: " + this.state.postInfo.address}
+                    titleStyle={{ textAlign: "left" }}
+                    hideChevron
+                  />
+                  <ListItem
+                    // badge={{
+                    //   value: "Test",
+                    //   textStyle: { color: "#ffbf00" },
+                    //   containerStyle: { marginRight: 55 }
+                    // }}
+                    title={"Credit Hours: " + this.state.postInfo.credit_hours + " hours"}
+                    titleStyle={{ textAlign: "left" }}
+                    hideChevron
+                  />
+                  <ListItem
+                    // badge={{
+                    //   value: "Test",
+                    //   textStyle: { color: "#ffbf00" },
+                    //   containerStyle: { marginRight: 55 }
+                    // }}
+                    title={"Description"}
+                    subtitle={this.state.postInfo.event_description}
+                    titleStyle={{ textAlign: "center", height: 50 }}
+                    hideChevron
+                    subtitleNumberOfLines={10}
+                    titleNumberOfLines={10}
+                  />
+                </List>
+              </Col>
+            </Row>
+          </Col>
+        </Grid>
+                {/* <Text>
                 Details' for {this.props.navigation.state.params.post.event_name}
-                </Text>
+                </Text> */}
                 {this.state.exists ? this._alreadyJoinedButton() : this._JoinOrDeleteButton()} 
 
-            </View>
+            </ScrollView>
         );
     }
 }
