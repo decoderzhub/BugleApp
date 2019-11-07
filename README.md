@@ -50,8 +50,10 @@ Users can open the events and see the details of the event
 ## 7. Layout Updates and added Messenger Groups
 Updated the layout view and added messenger groups tab to the middle bottom navigation tab.
 
-![layoutupdateandmessengergroups](https://user-images.githubusercontent.com/6371329/49266215-2fee9e00-f423-11e8-93e6-c21dcf48830e.gif)![buglelayoutupdateandmessengergroupsandroid](https://user-images.githubusercontent.com/6371329/49266786-7513cf80-f425-11e8-8494-9f9447ae1836.gif)
+![layoutupdateandmessengergroups](https://user-images.githubusercontent.com/6371329/49266215-2fee9e00-f423-11e8-93e6-c21dcf48830e.gif)<img src="https://user-images.githubusercontent.com/6371329/49266786-7513cf80-f425-11e8-8494-9f9447ae1836.gif" width="320" height="680">
 
+
+![buglelayoutupdateandmessengergroupsandroid](https://user-images.githubusercontent.com/6371329/49266786-7513cf80-f425-11e8-8494-9f9447ae1836.gif)
 ***
 
 ## 8. Group Messenger Chat
