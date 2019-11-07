@@ -73,6 +73,13 @@ Profile Stats Change and update in real-time and profile picture will display in
 
 ***
 
+## 10. Post Details
+Post details allows for the user to view the post details and join or delete if they are the event host.
+
+<img src="https://user-images.githubusercontent.com/6371329/62904659-3b75c100-bd35-11e9-800e-de8b0f921e34.gif" width="400" height="866">
+
+***
+
 # Milestones 
 
 ## Things to do (short-range):
@@ -87,7 +94,7 @@ Profile Stats Change and update in real-time and profile picture will display in
 
 5. [X] Marker on event location.  05-nov-18 
 
-6. [ ] Post Event Details need to populate on screen with supplied information.
+6. [X] Post Event Details need to populate on screen with supplied information. __projected__ (11-Aug-19)
 
 7. [X] Event details needs start time field and hours of credit volunteers will receive. 20-Nov-18
 
@@ -103,7 +110,7 @@ Profile Stats Change and update in real-time and profile picture will display in
 
 13. [ ] Develop screen component Received request, Sent request, and Received credits. __(Add to AppNavigator)__
 
-14. [ ] Allow user to un-join events removing user from chat-group and updating database.
+14. [ ] Allow user to un-join events removing user from chat-group and updating database. __projected__ (18-Aug-19)
 
 
  
