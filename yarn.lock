@@ -4108,9 +4108,9 @@ merge-stream@^2.0.0:
   integrity sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==
 
 merge@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/merge/-/merge-1.2.0.tgz#7531e39d4949c281a66b8c5a6e0265e8b05894da"
-  integrity sha1-dTHjnUlJwoGma4xabgJl6LBYlNo=
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/merge/-/merge-1.2.1.tgz#38bebf80c3220a8a487b6fcfb3941bb11720c145"
+  integrity sha512-VjFo4P5Whtj4vsLzsYBu5ayHhoHJ0UqNm7ibvShmbmoz7tGi0vXaoJbGdB+GmDMLUdg8DpQXEIeVDAe8MaABvQ==
 
 metro-babel-register@0.51.0:
   version "0.51.0"
@@ -5416,8 +5416,9 @@ react-native-keyboard-aware-scroll-view@^0.7.4:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
-"react-native-lightbox@github:shoutem/react-native-lightbox#v0.7.2":
+react-native-lightbox@shoutem/react-native-lightbox#v0.7.2:
   version "0.7.2"
+  uid "91f3f58759e9901d9c006b01ce32d074606eda0e"
   resolved "https://codeload.github.com/shoutem/react-native-lightbox/tar.gz/91f3f58759e9901d9c006b01ce32d074606eda0e"
   dependencies:
     create-react-class "^15.6.2"
@@ -5435,14 +5436,16 @@ react-native-maps@0.24.2:
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.24.2.tgz#19974f967cb0c2e24dab74ca879118e0932571b2"
   integrity sha512-1iNIDikp2dkCG+8DguaEviYZiMSYyvwqYT7pO2YTZvuFRDSc/P9jXMhTUnSh4wNDlEeQ47OJ09l0pwWVBZ7wxg==
 
-"react-native-navigation-experimental-compat@github:shoutem/react-native-navigation-experimental-compat#fbce4b9e478f808634a98dac48901ec6ed4ee9fd":
+react-native-navigation-experimental-compat@shoutem/react-native-navigation-experimental-compat#fbce4b9e478f808634a98dac48901ec6ed4ee9fd:
   version "1.1.1"
+  uid fbce4b9e478f808634a98dac48901ec6ed4ee9fd
   resolved "https://codeload.github.com/shoutem/react-native-navigation-experimental-compat/tar.gz/fbce4b9e478f808634a98dac48901ec6ed4ee9fd"
   dependencies:
     fbjs "~0.8.9"
 
-"react-native-photo-view@github:shoutem/react-native-photo-view#2f650beba07a263876c54f81a34b5ac2f9b805ce":
+react-native-photo-view@shoutem/react-native-photo-view#2f650beba07a263876c54f81a34b5ac2f9b805ce:
   version "1.5.2"
+  uid "2f650beba07a263876c54f81a34b5ac2f9b805ce"
   resolved "https://codeload.github.com/shoutem/react-native-photo-view/tar.gz/2f650beba07a263876c54f81a34b5ac2f9b805ce"
   dependencies:
     prop-types "^15.5.10"
@@ -5510,8 +5513,9 @@ react-native-tab-view@^1.0.0:
   dependencies:
     prop-types "^15.6.1"
 
-"react-native-transformable-image@github:shoutem/react-native-transformable-image#v0.0.20":
+react-native-transformable-image@shoutem/react-native-transformable-image#v0.0.20:
   version "0.0.20"
+  uid ef2e93fa9425bbb479bccec64d165ec85e76e949
   resolved "https://codeload.github.com/shoutem/react-native-transformable-image/tar.gz/ef2e93fa9425bbb479bccec64d165ec85e76e949"
   dependencies:
     prop-types "^15.5.10"
